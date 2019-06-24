@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta lang="tr"/>
+    <meta charset="UTF-8"/>
+    <title>YUB</title>
+
+
+    <style>
+        body{
+            background-color:rgb(159, 176, 209);
+        }
+
+        #competition{
+            background-color: rgb(204, 204, 233);
+            border: 3px solid white;
+            border-radius: 30px;
+            border-left-width: 12px;
+            margin-left: 300px;
+            margin-right: 300px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            font-family: Comic Sans MS;
+        }
+
+        #title{
+            padding-left: 300px;
+            padding-bottom: 20px;
+            font-weight: 1000;
+            font-size: 30px;
+            color: rgb(12, 88, 52);
+        }
+
+        #question{
+            font-size: 20px;
+            padding: 10px;
+        }
+
+        #first,#second,#third,#fourth{
+            font-size: 17px;
+            padding-left: 10px;
+            padding-bottom: 3px;
+        }
+
+        #last{
+            padding-top: 30px;
+        }
+
+        #time{
+            padding-left: 700px;
+            font-size: 17px;
+            font-weight: bold;
+            color: rgb(189, 16, 16);
+        }
+
+        #timeSecond{
+            font-size: 17px;
+            font-weight: bold;
+            color: black;
+        }
+
+        #next{
+            padding-left: 15px;
+            font-size:25px;
+            font-weight: bold;
+            color: purple;
+            cursor: pointer;
+        }
+        
+    </style>
+
+</head>
+<body>
+
+    <div id="competition">
+        <div id="title">BİLGİ YARIŞMASI</div>
+        <div id='question'>Soru</div>
+
+        <div id="first">
+            <span id="select1"> A) </span> <span id="answer1"></span>
+        </div>
+        <div id="second">
+            <span id="select2"> B) </span> <span id="answer2"></span>
+        </div>
+        <div id="third">
+            <span id="select3"> C) </span> <span id="answer3"></span>
+        </div>
+        <div id="fourth">
+            <span id="select4"> D) </span> <span id="answer4"></span>
+        </div>
+
+        <div id="last">
+            <span id="next">==></span> <span id="time">Zaman:</span> <span id="timeSecond">15</span>
+        </div>
+    </div>
+
+
+
+<script>
+
+    class Competition{
+        main(){
+            this.questionList = ["Galatasaray'ın Kaç Tane Süper Lig Kupası Vardır?",
+            "Dünyada Kaç Kıta Mevcuttur?",
+            "Aşağıda Verilen İlk Çağ Uygarlıklarından Hangisi Yazıyı İcat Etmiştir?",
+            "Üç Büyük Dince Kutsal Sayılan Şehir Hangisidir?",
+            "'Sinekli Bakkal' Romanının Yazarı Aşağıdakilerden Hangisidir?"];
+
+            this.answerList = [
+            [[20,false],[21,false],[22,true],[23,false]],
+            [[6,false],[9,false],[7,true],[5,false]],
+            [["Hititler",false],["Elamlar",false],["Sümerler",true],["Urartular",false]],
+            [["Mekke",false],["Roma",false],["Kudüs",true],["İstanbul",false]],
+            [["Reşat Nuri Güntekin",false],["Ziya Gökalp",false],["Halide Edip Adıvar",true],["Ömer Seyfettin",false]]
+            ];
+
+            this.qNumber = 0
+            this.chooseCtrl = false;
+            this.endGame = false;
+        }
+
+        random(min, max){
+            var x = -1;
+            while(x < min || x >= max)
+                x = Math.floor(Math.random() *10);
+
+            return x;
+        }
+
+        ask(){
+            // Soruların yerlerini karıştırdık. Cevapları da aynı şekilde.
+            for(var m=0; m < this.questionList.length; m++){
+                    var rndm = this.random(0, this.questionList.length);
+
+                    var j = this.questionList[m];
+                    var _j = this.answerList[m];
+
+                    this.questionList[m] = this.questionList[rndm];
+                    this.answerList[m] = this.answerList[rndm];
+
+                    this.questionList[rndm] = j;
+                    this.answerList[rndm] = _j;
+            };
+
+
+            document.getElementById('question').textContent = (this.qNumber +1) + "- " + this.questionList[this.qNumber];
+            
+            // Cevapları kendi içerisinde karıştırdık.
+            for(var i=0; i < this.answerList.length ; i++){
+
+                for(var m=0; m < this.answerList[0].length; m++){
+                    var rndm = this.random(0,4);
+                    var j = this.answerList[i][m];
+                    this.answerList[i][m] = this.answerList[i][rndm];
+                    this.answerList[i][rndm] = j;
+                };
+            };
+            
+            document.getElementById('answer1').textContent = this.answerList[this.qNumber][0][0];
+            document.getElementById('answer2').textContent = this.answerList[this.qNumber][1][0];
+            document.getElementById('answer3').textContent = this.answerList[this.qNumber][2][0];
+            document.getElementById('answer4').textContent = this.answerList[this.qNumber][3][0];
+        }
+
+        styles(color, cursor){
+            var selectStyle = document.getElementById(this.select).style;
+            
+            if(color=="green"){
+                selectStyle.border = "3px solid rgb(126, 184, 126)";
+                selectStyle.backgroundColor = "rgb(126, 184, 126)";
+                selectStyle.borderRadius = "14px";
+                selectStyle.cursor = cursor;
+            }
+
+            else if(color == "red"){
+                selectStyle.border = "3px solid rgb(173, 14, 14)";
+                selectStyle.backgroundColor = "rgb(173, 14, 14)";
+                selectStyle.borderRadius = "14px";
+                selectStyle.cursor = cursor;
+            }
+
+            else if(color == "normal"){
+                selectStyle.border = "none";
+                selectStyle.backgroundColor = "rgb(204, 204, 233)";
+                selectStyle.borderRadius = "0px";
+                selectStyle.cursor = cursor;
+            }
+
+            else
+                throw "'color' kısmına; green, red veya normal girmen gereklidir!";
+        }
+
+        checkFunc(text){
+            var that = this; // Bakın burası çok önemli(!) Aşğıdaki bir fonksiyonun içinden this'e ulaşmak için bunu yapıyoruz. 
+            var trueAnswer;
+
+            
+            this.answerList[this.qNumber].find((v) => {
+
+                if(v[1] == true)
+                    trueAnswer = v[0];
+
+            });
+
+            this.answerList[this.qNumber].find((v) => {
+                
+                if(v[0] == text && !that.chooseCtrl && !that.endGame){
+                    if(v[1] == true){
+                        document.body.style.backgroundColor = "green";
+
+                        that.styles("green","auto")
+                    }    
+
+                    else{
+                        document.body.style.backgroundColor = "red";
+                        
+                        that.styles("red","auto")
+
+                        console.log("Yanlış\nDoğru cevap: " + trueAnswer);
+                    }
+                }
+            });
+
+            this.chooseCtrl = true;
+            this.secondCtrl = this.second;
+
+        }
+
+
+        check(){
+            var that = this;
+
+            function checkSelects(number){
+                document.getElementById("select" + number).onclick = () => {
+                    var text = document.getElementById("answer" + number).textContent;
+                    that.checkFunc(text);
+                }
+
+                document.getElementById("select" + number).onmouseover =  () => {
+                    if(!that.chooseCtrl && !that.endGame){
+                        that.select = "select" + number;
+                        that.styles("green", "pointer");
+                    }
+                }
+                document.getElementById("select" + number).onmouseout = () => {
+                    if(!that.chooseCtrl)
+                        that.select = "select" + number;
+                        that.styles("normal", "auto");
+                    }
+            };
+
+            checkSelects(1);
+            checkSelects(2);
+            checkSelects(3);
+            checkSelects(4);
+
+
+            document.getElementById("next").onclick = a => {
+                if(this.qNumber == this.questionList.length - 1 || !this.chooseCtrl || this.endGame)
+                    return; // Sorular bitti veya şık işaretlenmedi.
+                
+                this.time(true)
+                this.styles("normal")
+
+                this.chooseCtrl = false;
+                this.qNumber++;
+
+                document.body.style.backgroundColor = "rgb(159, 176, 209)";
+
+                document.getElementById('question').textContent = (this.qNumber +1) + "- " + this.questionList[this.qNumber];
+                document.getElementById('answer1').textContent = this.answerList[this.qNumber][0][0];
+                document.getElementById('answer2').textContent = this.answerList[this.qNumber][1][0];
+                document.getElementById('answer3').textContent = this.answerList[this.qNumber][2][0];
+                document.getElementById('answer4').textContent = this.answerList[this.qNumber][3][0];
+            }
+        }
+
+        time(c){
+            if(c == true)
+                this.second = 15;
+                document.getElementById("timeSecond").textContent = this.second;
+
+            window.setTimeout(() => {
+                if(this.chooseCtrl){
+                    document.getElementById("timeSecond").textContent = this.secondCtrl;
+                    return;
+                }; //cevabı işaretledikten sonra bile 1 saniye azalmasını engelledik.
+                
+                this.second--;
+                document.getElementById("timeSecond").textContent = this.second;
+
+                if(this.second == 0){
+                    console.log("Zaman Tükendi...");
+                    this.endGame = true;
+                    return;
+                };
+
+                this.time(false);
+
+                },1000)
+
+        }
+    }
+
+
+function MainFunc(){
+    var comp = new Competition();
+    comp.main();
+    comp.ask();
+    comp.check();
+    comp.time(true);
+}
+
+document.body.onload = MainFunc();
+
+</script>
+
+</body>
+</html>
